@@ -44,7 +44,7 @@ class Main : JavaPlugin(){
             hiroshi = scoreboard.registerNewTeam("hiroshi")
         }
         hiroshi.prefix = "[ひろし]"
-
+        
         var timer = scoreboard.registerNewObjective("Timer","Dummy")
         var huwadamaer = scoreboard.registerNewObjective("Huwa","Dummy")
     }

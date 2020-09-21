@@ -1,6 +1,6 @@
 name: Gameplugin
 version: @version@
-main: gameplugin.gameplugin.Gameplugin
+main: gameplugin.gameplugin.Main
 api-version: 1.15
 authors: [tororo_1066]
 commands:

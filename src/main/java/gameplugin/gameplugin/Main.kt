@@ -14,7 +14,7 @@ var huwadamaer = ""
 var aooni : Team? = null
 var hiroshi : Team? = null
 val sbm = Bukkit.getScoreboardManager()
-val scoreboard = sbm.newScoreboard
+val scoreboard = sbm.mainScoreboard
 lateinit var plugin : Main
 
 
@@ -32,7 +32,7 @@ class Main : JavaPlugin(){
     override fun onEnable() {
         getCommand("gp")?.setExecutor(GameCommand)
 
-
+        server.logger.info("enable")
         var aooni = scoreboard.getTeam("aooni")
         if (aooni == null){
             aooni = scoreboard.registerNewTeam("aooni")
@@ -44,7 +44,7 @@ class Main : JavaPlugin(){
             hiroshi = scoreboard.registerNewTeam("hiroshi")
         }
         hiroshi.prefix = "[ひろし]"
-        
+
         var timer = scoreboard.registerNewObjective("Timer","Dummy")
         var huwadamaer = scoreboard.registerNewObjective("Huwa","Dummy")
     }

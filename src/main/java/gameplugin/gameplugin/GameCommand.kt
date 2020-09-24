@@ -7,17 +7,18 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
+import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.Team
 
 object GameCommand :CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) return false
-        when (args[1]) {
+        when (args[0]) {
             "help" -> {
 
             }
             "aooni" -> {
-                when (args[2]) {
+                when (args[1]) {
                     "help" -> {
 
                     }
@@ -41,20 +42,36 @@ object GameCommand :CommandExecutor {
                                         p.sendTitle("§9ーーー1ーーー", "", 1, 20, 1)
                                     }
                                     if (start == 0) {
-                                        w.playSound(p.location, Sound.BLOCK_ANVIL_PLACE, 100f, 1f)
+                                        w.playSound(p.location, Sound.ENTITY_TNT_PRIMED, 100f, 1f)
                                         p.sendTitle("§9青鬼§fごっこ", "スタート", 1, 100, 1)
-                                        for (h : OfflinePlayer in scoreboard.getTeam("hiroshi")?.players!!) {
+                                        for (h : OfflinePlayer in teamboard.getTeam("hiroshi")?.players!!) {
                                             h.player?.teleport(Location(Bukkit.getWorld("world"), 4.0, 50.0, 16.0))
+                                            cancel()
                                         }
-                                        cancel()
-
                                     }
+                                    start--
                                 }
 
 
                             }
 
                         }.runTaskTimer(plugin, 0, 20)
+
+                        object : BukkitRunnable(){
+                            var time = 903
+                            override fun run() {
+                                if (time == 900){
+
+                                    for (p : Player in Bukkit.getOnlinePlayers()){
+                                        p.scoreboard = objeboard
+                                    }
+                                }
+                                time--
+                                timer?.getScore("§b残り時間 $time")?.score = time
+
+
+                            }
+                        }.runTaskTimer(plugin,0,20)
                     }
 
                     "wp" -> {

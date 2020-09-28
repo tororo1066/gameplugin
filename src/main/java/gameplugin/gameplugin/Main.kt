@@ -2,68 +2,79 @@ package gameplugin.gameplugin
 
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.Objective
 import org.bukkit.scoreboard.Team
 
-var prefix = "§d[GamePlugin]"
+var prefix = "§a[GamePlugin]§f"
 
-var time = ""
-var timer : Objective? = null
-var huwadama = ""
-var huwadamaer : Objective? = null
-var aooni : Team? = null
-var hiroshi : Team? = null
 val sbm = Bukkit.getScoreboardManager()
-val teamboard = sbm.newScoreboard
-val objeboard = sbm.newScoreboard
-var scoreteam : Team? = null
+val scoreboard = sbm.mainScoreboard
+var timer : Objective? = scoreboard.getObjective("Timer")
+var huwadama = ""
+var huwadamaer : Objective? = scoreboard.getObjective("Huwa")
+var aooni : Team? = scoreboard.getTeam("aooni")
+var hiroshi : Team? = scoreboard.getTeam("hiroshi")
 lateinit var plugin : Main
+val huwadamamenu = Bukkit.createInventory(null,9,"フワ玉")
+var aoonistart = false
 
 
 class Main : JavaPlugin(){
 
 
 
-
-
-
-
-
     override fun onEnable() {
+        aoonistart = false
+        val washitu = ItemStack(Material.PAPER)
+        val piano = ItemStack(Material.PAPER)
+        washitu.itemMeta.setDisplayName("和室")
+        piano.itemMeta.setDisplayName("ピアノ部屋")
+        huwadamamenu.setItem(2,washitu)
+        huwadamamenu.setItem(6,piano)
+        plugin = this
         getCommand("gp")?.setExecutor(GameCommand)
 
-        plugin = this
         server.logger.info("enable")
-        var aooni = teamboard.getTeam("aooni")
-        if (aooni == null){
-            aooni = teamboard.registerNewTeam("aooni")
+
+
+        var aooni = scoreboard.getTeam("aooni")
+        if (aooni == null) {
+            aooni = scoreboard.registerNewTeam("aooni")
         }
         aooni.prefix = ChatColor.BLUE.toString() + "[青鬼]"
 
-        var hiroshi = teamboard.getTeam("hiroshi")
+        var hiroshi = scoreboard.getTeam("hiroshi")
         if (hiroshi == null){
-            hiroshi = teamboard.registerNewTeam("hiroshi")
+            hiroshi = scoreboard.registerNewTeam("hiroshi")
         }
+
+
         hiroshi.prefix = "[ひろし]"
 
-        var timer = objeboard.getObjective("Timer")
+        var timer = scoreboard.getObjective("Timer")
         if (timer == null) {
-            timer = objeboard.registerNewObjective("Timer", "Dummy")
+            timer = scoreboard.registerNewObjective("Timer", "Dummy")
         }
         timer.displaySlot = DisplaySlot.SIDEBAR
-        timer.displayName = "§9青鬼§fごっこ"
-        var huwadamaer = objeboard.getObjective("Huwa")
+
+        var huwadamaer = scoreboard.getObjective("Huwa")
         if (huwadamaer == null) {
-            huwadamaer = objeboard.registerNewObjective("Huwa", "Dummy")
+            huwadamaer = scoreboard.registerNewObjective("Huwa", "Dummy")
         }
-        var scoreteam = objeboard.getTeam("Time")
-        if (scoreteam == null) {
-            scoreteam = objeboard.registerNewTeam("Time")
-        }
-        scoreteam.addEntry("§9青鬼§fごっこ")
+        huwadamaer.displaySlot = DisplaySlot.SIDEBAR
+
+
     }
+
+    override fun onDisable() {
+        scoreboard.getTeam("aooni")?.unregister()
+        scoreboard.getTeam("hiroshi")?.unregister()
+    }
+
 
 }
 

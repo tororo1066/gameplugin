@@ -3,40 +3,46 @@ package gameplugin.gameplugin
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.scoreboard.DisplaySlot
-import org.bukkit.scoreboard.Objective
 import org.bukkit.scoreboard.Team
 
 var prefix = "§a[GamePlugin]§f"
 
+
+var taizai = true
+var time = 900
+var onitime = 180
 val sbm = Bukkit.getScoreboardManager()
 val scoreboard = sbm.mainScoreboard
-var timer : Objective? = scoreboard.getObjective("Timer")
-var huwadama = ""
-var huwadamaer : Objective? = scoreboard.getObjective("Huwa")
-var aooni : Team? = scoreboard.getTeam("aooni")
-var hiroshi : Team? = scoreboard.getTeam("hiroshi")
 lateinit var plugin : Main
 val huwadamamenu = Bukkit.createInventory(null,9,"フワ玉")
 var aoonistart = false
+var easy = false
+var normal = true
+var zanki = HashMap<Player,Int>()
+var die = false
 
 
 class Main : JavaPlugin(){
-
-
-
     override fun onEnable() {
+
         aoonistart = false
         val washitu = ItemStack(Material.PAPER)
         val piano = ItemStack(Material.PAPER)
-        washitu.itemMeta.setDisplayName("和室")
-        piano.itemMeta.setDisplayName("ピアノ部屋")
+        val washitumeta = washitu.itemMeta
+        washitumeta.setDisplayName("和室")
+        val pianometa = piano.itemMeta
+        pianometa.setDisplayName("ピアノ部屋")
+        washitu.itemMeta = washitumeta
+        piano.itemMeta = pianometa
         huwadamamenu.setItem(2,washitu)
         huwadamamenu.setItem(6,piano)
         plugin = this
         getCommand("gp")?.setExecutor(GameCommand)
+        server.pluginManager.registerEvents(EventListener, plugin)
+
 
         server.logger.info("enable")
 
@@ -46,40 +52,34 @@ class Main : JavaPlugin(){
             aooni = scoreboard.registerNewTeam("aooni")
         }
         aooni.prefix = ChatColor.BLUE.toString() + "[青鬼]"
+        aooni.setOption(Team.Option.NAME_TAG_VISIBILITY,Team.OptionStatus.NEVER)
 
         var hiroshi = scoreboard.getTeam("hiroshi")
         if (hiroshi == null){
             hiroshi = scoreboard.registerNewTeam("hiroshi")
         }
-
+        hiroshi.setOption(Team.Option.NAME_TAG_VISIBILITY,Team.OptionStatus.NEVER)
+        hiroshi.setAllowFriendlyFire(false)
 
         hiroshi.prefix = "[ひろし]"
 
-        var timer = scoreboard.getObjective("Timer")
-        if (timer == null) {
-            timer = scoreboard.registerNewObjective("Timer", "Dummy")
+        var hukkatu = scoreboard.getTeam("hukkatu")
+        if (hukkatu == null){
+            hukkatu = scoreboard.registerNewTeam("hukkatu")
         }
-        timer.displaySlot = DisplaySlot.SIDEBAR
+        hukkatu.setAllowFriendlyFire(false)
 
-        var huwadamaer = scoreboard.getObjective("Huwa")
-        if (huwadamaer == null) {
-            huwadamaer = scoreboard.registerNewObjective("Huwa", "Dummy")
+        var spectator = scoreboard.getTeam("spectator")
+        if (spectator == null){
+            spectator = scoreboard.registerNewTeam("spectator")
         }
-        huwadamaer.displaySlot = DisplaySlot.SIDEBAR
-
+        spectator.prefix = "[観戦]"
 
     }
 
     override fun onDisable() {
-        scoreboard.getTeam("aooni")?.unregister()
-        scoreboard.getTeam("hiroshi")?.unregister()
+
     }
 
 
 }
-
-
-
-
-
-

@@ -1,4 +1,4 @@
-name: Gameplugin
+name: GamePlugin
 version: @version@
 main: gameplugin.gameplugin.Main
 api-version: 1.15
